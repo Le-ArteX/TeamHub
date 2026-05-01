@@ -5,6 +5,11 @@ const nextConfig = {
       { protocol: 'https', hostname: 'res.cloudinary.com' },
     ],
   },
+  experimental: {
+    turbo: {
+      rules: {},
+    },
+  },
 };
 
 export default nextConfig;
