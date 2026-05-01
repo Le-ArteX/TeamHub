@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
+    "postinstall": "npx prisma generate --schema=apps/api/prisma/schema.prisma",
     "start": "turbo run start",
     "lint": "turbo run lint"
   },
