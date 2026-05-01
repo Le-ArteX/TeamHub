@@ -11,7 +11,7 @@ function initSocket(server) {
     },
   });
 
-  // Authenticate socket connections via token
+
   io.use((socket, next) => {
     const token = socket.handshake.auth?.token;
     if (!token) return next(new Error('Authentication error'));
@@ -28,10 +28,10 @@ function initSocket(server) {
   io.on('connection', (socket) => {
     console.log(`User connected: ${socket.userId}`);
 
-    // Join workspace rooms
+
     socket.on('join-workspace', (workspaceId) => {
       socket.join(`workspace:${workspaceId}`);
-      // Broadcast online status
+
       socket.to(`workspace:${workspaceId}`).emit('user-online', {
         userId: socket.userId,
       });
@@ -49,7 +49,7 @@ function initSocket(server) {
       socket.to(`workspace:${workspaceId}`).emit('collaboration-update', {
         userId: socket.userId,
         userName,
-        type, // 'typing', 'editing', 'stopped'
+        type,
         goalId
       });
     });

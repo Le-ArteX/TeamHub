@@ -1,7 +1,7 @@
 const prisma = require('../lib/prisma');
 const { getIO } = require('../lib/socket');
 
-// POST /api/workspaces
+
 async function createWorkspace(req, res) {
   try {
     const { name, description, accentColor } = req.body;
@@ -31,7 +31,7 @@ async function createWorkspace(req, res) {
   }
 }
 
-// GET /api/workspaces
+
 async function getWorkspaces(req, res) {
   try {
     const workspaces = await prisma.workspace.findMany({
@@ -54,7 +54,7 @@ async function getWorkspaces(req, res) {
   }
 }
 
-// GET /api/workspaces/:workspaceId
+
 async function getWorkspace(req, res) {
   try {
     const workspace = await prisma.workspace.findUnique({
@@ -75,7 +75,7 @@ async function getWorkspace(req, res) {
   }
 }
 
-// PUT /api/workspaces/:workspaceId
+
 async function updateWorkspace(req, res) {
   try {
     const { name, description, accentColor } = req.body;
@@ -96,7 +96,7 @@ async function updateWorkspace(req, res) {
   }
 }
 
-// DELETE /api/workspaces/:workspaceId
+
 async function deleteWorkspace(req, res) {
   try {
     await prisma.workspace.delete({ where: { id: req.params.workspaceId } });
@@ -107,7 +107,7 @@ async function deleteWorkspace(req, res) {
   }
 }
 
-// POST /api/workspaces/:workspaceId/invite
+
 async function inviteMember(req, res) {
   try {
     const { email, role } = req.body;
@@ -130,10 +130,10 @@ async function inviteMember(req, res) {
       include: { user: { select: { id: true, name: true, email: true, avatarUrl: true } } },
     });
 
-    // Emit real-time event
+
     try {
       getIO().to(`workspace:${req.params.workspaceId}`).emit('member-joined', { member });
-    } catch {}
+    } catch { }
 
     res.status(201).json({ member });
   } catch (error) {
@@ -142,7 +142,7 @@ async function inviteMember(req, res) {
   }
 }
 
-// PUT /api/workspaces/:workspaceId/members/:memberId/role
+
 async function updateMemberRole(req, res) {
   try {
     const { role } = req.body;
@@ -163,7 +163,7 @@ async function updateMemberRole(req, res) {
   }
 }
 
-// DELETE /api/workspaces/:workspaceId/members/:memberId
+
 async function removeMember(req, res) {
   try {
     await prisma.workspaceMember.delete({ where: { id: req.params.memberId } });
@@ -174,7 +174,7 @@ async function removeMember(req, res) {
   }
 }
 
-// GET /api/workspaces/:workspaceId/audit-logs
+
 async function getAuditLogs(req, res) {
   try {
     const logs = await prisma.auditLog.findMany({

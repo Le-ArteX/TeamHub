@@ -10,7 +10,7 @@ const {
 } = require('../utils/jwt');
 const { sendVerificationEmail } = require('../lib/email');
 
-// POST /api/auth/register
+
 async function register(req, res) {
   console.log("📩 [API] REGISTER ATTEMPT RECEIVED:", req.body?.email);
   try {
@@ -36,12 +36,12 @@ async function register(req, res) {
         verificationToken: verificationToken,
         isVerified: false
       },
-      select: { 
-        id: true, 
-        email: true, 
-        name: true, 
-        avatarUrl: true, 
-        isVerified: true 
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        avatarUrl: true,
+        isVerified: true
       }
     });
 
@@ -52,7 +52,7 @@ async function register(req, res) {
     const accessToken = generateAccessToken(user.id);
     const refreshToken = generateRefreshToken(user.id);
 
-    // Hash the refresh token before saving
+
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
 
     await prisma.user.update({
@@ -60,7 +60,7 @@ async function register(req, res) {
       data: { refreshToken: hashedRefreshToken }
     });
 
-    // Send verification email (asynchronous, don't block response)
+
     sendVerificationEmail(email, name, verificationToken).catch(err => console.error('Email send failed:', err));
 
     setTokenCookies(res, accessToken, refreshToken);
@@ -68,16 +68,16 @@ async function register(req, res) {
     res.status(201).json({ user });
   } catch (error) {
     console.error('Register error:', error);
-    res.status(500).json({ 
-      error: 'Registration failed', 
+    res.status(500).json({
+      error: 'Registration failed',
       details: error.message,
-      code: error.code // Prisma error codes are very helpful
+      code: error.code
     });
   }
 }
 
 
-// POST /api/auth/login
+
 async function login(req, res) {
   try {
     const { email, password } = req.body;
@@ -120,7 +120,7 @@ async function login(req, res) {
   }
 }
 
-// POST /api/auth/logout
+
 async function logout(req, res) {
   try {
     if (req.user) {
@@ -137,7 +137,6 @@ async function logout(req, res) {
   }
 }
 
-// POST /api/auth/refresh
 async function refresh(req, res) {
   try {
     const token = req.cookies.refreshToken;
@@ -182,12 +181,11 @@ async function refresh(req, res) {
   }
 }
 
-// GET /api/auth/me
+
 async function getMe(req, res) {
   res.json({ user: req.user });
 }
 
-// PUT /api/auth/profile
 async function updateProfile(req, res) {
   try {
     const { name } = req.body;
@@ -196,7 +194,7 @@ async function updateProfile(req, res) {
     const data = {};
     if (name) data.name = name;
 
-    // Upload avatar buffer to Cloudinary if a file was provided
+
     if (req.file) {
       const result = await uploadToCloudinary(req.file.buffer);
       data.avatarUrl = result.secure_url;
@@ -215,7 +213,7 @@ async function updateProfile(req, res) {
   }
 }
 
-// GET /api/auth/verify?code=...
+
 async function verifyEmail(req, res) {
   try {
     const { code } = req.query;

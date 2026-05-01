@@ -1,7 +1,7 @@
 const { verifyAccessToken } = require('../utils/jwt');
 const prisma = require('../lib/prisma');
 
-// Authenticate user from access token cookie
+
 async function authenticate(req, res, next) {
   try {
     const token = req.cookies.accessToken;
@@ -26,7 +26,7 @@ async function authenticate(req, res, next) {
   }
 }
 
-// Require specific workspace role (ADMIN or MEMBER)
+
 function requireRole(...roles) {
   return async (req, res, next) => {
     try {
