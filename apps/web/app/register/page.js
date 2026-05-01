@@ -62,7 +62,7 @@ export default function RegisterPage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Password</label>
-            <input id="register-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required
+            <input id="register-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="new-password"
               className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" placeholder="Min 6 characters" />
           </div>
           <button id="register-submit" type="submit" disabled={loading}
