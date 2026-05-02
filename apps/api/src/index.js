@@ -29,8 +29,28 @@ app.use((req, res, next) => {
 });
 
 
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', message: 'Collaborative Team Hub API is running' });
+app.get('/', (req, res) => {
+  res.json({ message: 'Collaborative Team Hub API is live!' });
+});
+
+app.get('/health', async (req, res) => {
+  try {
+    const { PrismaClient } = require('@prisma/client');
+    const prisma = new PrismaClient();
+    await prisma.$connect();
+    res.json({ 
+      status: 'ok', 
+      message: 'Collaborative Team Hub API is running',
+      database: 'connected' 
+    });
+    await prisma.$disconnect();
+  } catch (error) {
+    res.status(500).json({ 
+      status: 'error', 
+      message: 'API is running but Database connection failed',
+      error: error.message 
+    });
+  }
 });
 
 
