@@ -12,7 +12,7 @@ const { sendVerificationEmail } = require('../lib/email');
 
 
 async function register(req, res) {
-  console.log("📩 [API] REGISTER ATTEMPT RECEIVED:", req.body?.email);
+  console.log("[API] REGISTER ATTEMPT:", req.body);
   try {
     const { email, password, name } = req.body;
 
@@ -45,9 +45,9 @@ async function register(req, res) {
       }
     });
 
-    console.log("\n\n" + "🚀".repeat(20));
-    console.log(`🔥 VERIFICATION TOKEN FOR ${email}: [ ${verificationToken} ] 🔥`);
-    console.log("🚀".repeat(20) + "\n\n");
+    console.log("\n\n" + "*".repeat(20));
+    console.log(`VERIFICATION TOKEN FOR ${email}: [ ${verificationToken} ]`);
+    console.log("*".repeat(20) + "\n\n");
 
     const accessToken = generateAccessToken(user.id);
     const refreshToken = generateRefreshToken(user.id);
@@ -67,7 +67,7 @@ async function register(req, res) {
 
     res.status(201).json({ user });
   } catch (error) {
-    console.error('Register error:', error);
+    console.error('[API] REGISTER ERROR:', error);
     res.status(500).json({
       error: 'Registration failed',
       details: error.message,
@@ -79,6 +79,7 @@ async function register(req, res) {
 
 
 async function login(req, res) {
+  console.log("[API] LOGIN ATTEMPT:", req.body?.email);
   try {
     const { email, password } = req.body;
 

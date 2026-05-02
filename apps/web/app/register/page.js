@@ -21,10 +21,11 @@ export default function RegisterPage() {
     try {
       await register({ name, email, password });
       router.push("/verify");
+      //
 
     } catch (err) {
       console.error("❌ [WEB] REGISTRATION ERROR:", err);
-      const msg = err.response?.data?.details 
+      const msg = err.response?.data?.details
         ? `${err.response.data.error}: ${err.response.data.details}`
         : (err.response?.data?.error || "Registration failed");
       setError(msg);

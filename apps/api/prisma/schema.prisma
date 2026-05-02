@@ -1,4 +1,3 @@
-// Collaborative Team Hub — Prisma Schema
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,18 +7,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ─── User ────────────────────────────────────────────────────────
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  password     String
-  name         String
-  avatarUrl    String?
-  refreshToken String?
-  isVerified   Boolean  @default(false)
-  verificationToken String? @unique
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id                String   @id @default(cuid())
+  email             String   @unique
+  password          String
+  name              String
+  avatarUrl         String?
+  refreshToken      String?
+  isVerified        Boolean  @default(false)
+  verificationToken String?  @unique
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
   memberships     WorkspaceMember[]
   ownedGoals      Goal[]            @relation("GoalOwner")
@@ -32,7 +30,6 @@ model User {
   auditLogs       AuditLog[]
 }
 
-// ─── Workspace ───────────────────────────────────────────────────
 model Workspace {
   id          String   @id @default(cuid())
   name        String
@@ -49,16 +46,15 @@ model Workspace {
   auditLogs     AuditLog[]
 }
 
-// ─── WorkspaceMember (join table with role) ──────────────────────
 enum Role {
   ADMIN
   MEMBER
 }
 
 model WorkspaceMember {
-  id        String   @id @default(cuid())
-  role      Role     @default(MEMBER)
-  joinedAt  DateTime @default(now())
+  id       String   @id @default(cuid())
+  role     Role     @default(MEMBER)
+  joinedAt DateTime @default(now())
 
   userId      String
   workspaceId String
@@ -68,7 +64,6 @@ model WorkspaceMember {
   @@unique([userId, workspaceId])
 }
 
-// ─── Goal ────────────────────────────────────────────────────────
 enum GoalStatus {
   NOT_STARTED
   IN_PROGRESS
@@ -87,15 +82,14 @@ model Goal {
 
   ownerId     String
   workspaceId String
-  owner       User       @relation("GoalOwner", fields: [ownerId], references: [id], onDelete: Cascade)
-  workspace   Workspace  @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  owner       User      @relation("GoalOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 
   milestones  Milestone[]
   actionItems ActionItem[]
   activities  Activity[]
 }
 
-// ─── Milestone ───────────────────────────────────────────────────
 model Milestone {
   id              String   @id @default(cuid())
   title           String
@@ -108,11 +102,11 @@ model Milestone {
   goal   Goal   @relation(fields: [goalId], references: [id], onDelete: Cascade)
 }
 
-// ─── Announcement ────────────────────────────────────────────────
+// ─── Announcement ──────────────────────────────────────  ──────────
 model Announcement {
   id        String   @id @default(cuid())
   title     String
-  content   String   // rich-text HTML
+  content   String // rich-text HTML
   pinned    Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -126,7 +120,6 @@ model Announcement {
   reactions Reaction[]
 }
 
-// ─── Comment ─────────────────────────────────────────────────────
 model Comment {
   id        String   @id @default(cuid())
   content   String
@@ -188,9 +181,9 @@ model ActionItem {
 // ─── Activity (feed) ─────────────────────────────────────────────
 model Activity {
   id        String   @id @default(cuid())
-  type      String   // e.g. "GOAL_CREATED", "STATUS_CHANGED", "COMMENT_ADDED"
+  type      String // e.g. "GOAL_CREATED", "STATUS_CHANGED", "COMMENT_ADDED"
   message   String
-  meta      Json?    // optional metadata
+  meta      Json? // optional metadata
   createdAt DateTime @default(now())
 
   userId      String
@@ -221,9 +214,9 @@ model AuditLog {
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   userId      String
   user        User      @relation(fields: [userId], references: [id])
-  action      String    // CREATE_GOAL, UPDATE_TASK, etc.
-  entityType  String    // GOAL, ACTION_ITEM, ANNOUNCEMENT
+  action      String // CREATE_GOAL, UPDATE_TASK, etc.
+  entityType  String // GOAL, ACTION_ITEM, ANNOUNCEMENT
   entityId    String
-  details     Json?     // Old vs New values
+  details     Json? // Old vs New values
   createdAt   DateTime  @default(now())
 }
