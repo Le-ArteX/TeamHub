@@ -4,6 +4,7 @@
     "description": "Collaborative Team Hub — REST API",
     "main": "src/index.js",
     "scripts": {
+        "build": "npx prisma generate",
         "dev": "nodemon src/index.js",
         "start": "node src/index.js",
         "db:migrate": "npx prisma migrate dev",
